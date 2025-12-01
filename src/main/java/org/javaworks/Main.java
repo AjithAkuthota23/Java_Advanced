@@ -1,17 +1,48 @@
 package org.javaworks;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.io.FileInputStream;
+import java.sql.*;
+import java.util.Properties;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+    /*
+    Prevent SQL Injection
+     */
+    public static void main(String[] args) throws Exception {
+        try {
+            //Step 1: Download the jar file and add it to libraries of your project(IntelliJ)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Properties props = new Properties();
+            FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
+            props.load(fis);
+
+            String url = props.getProperty("db.url");
+            String user = props.getProperty("db.user");
+            String pass = props.getProperty("db.password");
+
+            Connection con = DriverManager.getConnection(url, user, pass);
+
+            Statement stmt = con.createStatement();
+            String sql = "UPDATE accounts SET balance = balance + ? WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDouble(1, 5000);
+            ps.setInt(2, 2);
+            ps.executeUpdate();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM accounts");
+
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " - " +
+                        rs.getString("name") + " - " +
+                        rs.getDouble("balance"));
+            }
+
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
