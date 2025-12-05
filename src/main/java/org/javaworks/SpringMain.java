@@ -1,11 +1,8 @@
 package org.javaworks;
 
-import org.javaworks.Spring.ConstructorInjection;
-import org.javaworks.Spring.FieldInjection;
-import org.javaworks.Spring.SetterInjection;
+import org.javaworks.Spring.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.javaworks.Spring.HelloWorld;
 
 /*
     Spring is a large, modular application framework for Java that solves common enterprise problems: wiring components, transaction management, declarative configuration, AOP, data access, web MVC, and more. In practice people most commonly use Spring Boot (opinionated setup) to get apps running quickly.
@@ -31,10 +28,12 @@ public class SpringMain {
         ConstructorInjection constructorInjection = context.getBean(ConstructorInjection.class);
         SetterInjection setterInjection = context.getBean(SetterInjection.class);
         FieldInjection fieldInjection = context.getBean(FieldInjection.class);
+        QualifierExample qualifierExample = context.getBean(QualifierExample.class);
 
         System.out.println(service.sayHello());
         constructorInjection.execute();
         setterInjection.execute();
         fieldInjection.execute();
+        qualifierExample.execute();
     }
 }
