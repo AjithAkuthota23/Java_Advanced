@@ -29,11 +29,19 @@ public class SpringMain {
         SetterInjection setterInjection = context.getBean(SetterInjection.class);
         FieldInjection fieldInjection = context.getBean(FieldInjection.class);
         QualifierExample qualifierExample = context.getBean(QualifierExample.class);
+        HelloServiceConfig helloServiceConfig = context.getBean(HelloServiceConfig.class);
+        MessageServiceScope messageServiceScopeOne = context.getBean(MessageServiceScope.class);
+        MessageServiceScope messageServiceScopeTwo = context.getBean(MessageServiceScope.class); // though created twice, constructor is called once
+        AccountServiceScope accountServiceScopeOne = context.getBean(AccountServiceScope.class);
+        AccountServiceScope accountServiceScopeTwo = context.getBean(AccountServiceScope.class); // new object created everytime
 
         System.out.println(service.sayHello());
         constructorInjection.execute();
         setterInjection.execute();
         fieldInjection.execute();
         qualifierExample.execute();
+        System.out.println(helloServiceConfig.sayHello()); //Using Configuration annotation(Not by component scan)
+        System.out.println(messageServiceScopeOne==messageServiceScopeTwo); //Singleton scope: Object created only once
+        System.out.println(accountServiceScopeOne==accountServiceScopeTwo); //Prototype scope: Object created every time
     }
 }
